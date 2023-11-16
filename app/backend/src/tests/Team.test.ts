@@ -30,4 +30,17 @@ describe('Testes da rota /teams', () => {
     expect(status).to.be.equal(200);
     expect(body).to.be.deep.equal(teams[0]);
   });
+
+  it('GET /teams/:id - Should return a 404 error', async function() {
+    sinon.stub(SequelizeTeam, 'findByPk').resolves(null);
+
+    const { status, body } = await chai.request(app).get('/teams/1');
+
+    expect(status).to.be.equal(404);
+    expect(body).to.be.deep.equal({
+        message: 'Team 1 not found',
+    });
+  });
+
+  afterEach(() => sinon.restore())
 });

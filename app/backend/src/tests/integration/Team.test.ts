@@ -21,4 +21,13 @@ describe('Testes da rota /teams', () => {
     expect(status).to.be.equal(200);
     expect(body).to.be.deep.equal(teams);
   })
+
+  it('GET /teams/:id - Should return a team', async function() {
+    sinon.stub(SequelizeTeam, 'findByPk').resolves(teams[0] as any);
+
+    const { status, body } = await chai.request(app).get('/teams/1');
+
+    expect(status).to.be.equal(200);
+    expect(body).to.be.deep.equal(teams[0]);
+  });
 });

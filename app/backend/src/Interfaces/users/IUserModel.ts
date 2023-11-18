@@ -7,5 +7,5 @@ export type loginPayload = {
 
 export default interface IUserModel {
   findByEmail(email: loginPayload['email']): Promise<IUser | null>;
-  findById(id: IUser['id']): Promise<IUser | null>;
+  findRole(id: IUser['id']): Promise<string | null>;
 }

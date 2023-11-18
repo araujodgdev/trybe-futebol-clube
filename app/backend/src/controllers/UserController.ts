@@ -11,8 +11,7 @@ export default class UserController {
   }
 
   public async findRole(req: Request, res: Response, id: number): Promise<Response> {
-    const { status, data } = await this.userService.findById(id);
-    const { role } = data as any;
-    return res.status(mapStatusHTTP(status)).json({ role });
+    const { status, data } = await this.userService.findRole(id);
+    return res.status(mapStatusHTTP(status)).json({ role: data });
   }
 }

@@ -19,7 +19,7 @@ export default class LoginValidation {
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string || 'secret');
       res.locals.user = decoded;
       next();
-    } catch (error: any) {
+    } catch (error) {
       return res.status(401).json({ message: 'Expired or invalid token' });
     }
   }

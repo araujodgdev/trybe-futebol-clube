@@ -30,13 +30,12 @@ export default class UserService {
     };
   }
 
-  public async findById(id: IUser['id']): Promise<ServiceResponse<IUser>> {
-    const user = await this.userModel.findById(id);
+  public async findRole(id: IUser['id']): Promise<ServiceResponse<string>> {
+    const role = await this.userModel.findRole(id) as string;
 
-    if (!user) return { status: 'NOT_FOUND', data: { message: 'User not found' } };
     return {
       status: 'SUCCESSFUL',
-      data: user,
+      data: role,
     };
   }
 }

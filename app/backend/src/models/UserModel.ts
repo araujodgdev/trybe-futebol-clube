@@ -12,4 +12,12 @@ export default class UserModel implements IUserModel {
     const { id, password, username, role }: IUser = dbData;
     return { id, email, password, username, role };
   }
+
+  public async findById(id: IUser['id']): Promise<IUser | null> {
+    const dbData = await this.model.findByPk(id);
+    if (!dbData) return null;
+
+    const { email, password, username, role }: IUser = dbData;
+    return { id, email, password, username, role };
+  }
 }

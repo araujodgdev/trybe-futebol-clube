@@ -13,4 +13,15 @@ export default class MatchService {
       data: matches,
     };
   }
+
+  public async findFilteredMatches(
+    filter: { inProgress?: boolean },
+  ): Promise<ServiceResponse<IMatch[]>> {
+    const matches = await this.model.findInProgress(filter);
+
+    return {
+      status: 'SUCCESSFUL',
+      data: matches,
+    };
+  }
 }

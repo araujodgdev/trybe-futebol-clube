@@ -1,4 +1,4 @@
-import IMatchModel from '../Interfaces/matches/IMatchModel';
+import IMatchModel, { Result } from '../Interfaces/matches/IMatchModel';
 import SequelizeMatch from '../database/models/SequelizeMatch';
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import IMatch from '../Interfaces/matches/IMatch';
@@ -33,5 +33,11 @@ export default class MatchModel implements IMatchModel {
     const dbData = await this.model.update({ inProgress: false }, { where: { id: matchId } });
 
     return dbData;
+  }
+
+  public async update(id: number, data: Partial<Result>): Promise<number[]> {
+    const result = await this.model.update(data, { where: { id } });
+
+    return result;
   }
 }

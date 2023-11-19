@@ -10,6 +10,12 @@ router.get('/', (req: Request, res: Response) =>
   matchController.getAllMatches(req, res));
 
 router.patch(
+  '/:id',
+  LoginValidation.signedUp,
+  (req: Request, res: Response) => matchController.updateResult(req, res),
+);
+
+router.patch(
   '/:id/finish',
   LoginValidation.signedUp,
   (req: Request, res: Response) => matchController.finishMatch(req, res),

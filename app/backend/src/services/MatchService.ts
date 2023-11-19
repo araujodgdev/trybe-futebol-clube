@@ -1,6 +1,7 @@
 import MatchModel from '../models/MatchModel';
 import { ServiceMessage, ServiceResponse } from '../Interfaces/ServiceResponse';
 import IMatch from '../Interfaces/matches/IMatch';
+import { Result } from '../Interfaces/matches/IMatchModel';
 
 export default class MatchService {
   constructor(private model = new MatchModel()) {}
@@ -38,6 +39,25 @@ export default class MatchService {
     return {
       status: 'SUCCESSFUL',
       data: { message: 'Finished' },
+    };
+  }
+
+  public async updateResult(
+    matchId: IMatch['id'],
+    data: Partial<Result>,
+  ): Promise<ServiceResponse<ServiceMessage>> {
+    const [affectedRows] = await this.model.update(matchId, data);
+
+    if (affectedRows === 0) {
+      return {
+        status: 'NOT_FOUND',
+        data: { message: 'No match updated' },
+      };
+    }
+
+    return {
+      status: 'SUCCESSFUL',
+      data: { message: 'Updated' },
     };
   }
 }

@@ -6,6 +6,7 @@ import chaiHttp = require('chai-http');
 import { app } from '../app';
 import SequelizeMatch from '../database/models/SequelizeMatch';
 import { matches, matchesFinished, matchesInProgress } from './mocks/MatchMocks';
+import LoginValidation from '../middlewares/LoginValidation';
 
 chai.use(chaiHttp);
 
@@ -40,6 +41,42 @@ describe('Testes da rota /matches', () => {
     expect(status).to.be.equal(200);
     expect(body).to.have.lengthOf(1);
     expect(body[0].in_progress).to.be.equal(false);
+  });
+
+  it('PATCH /matches/:id/finish - Deve finalizar uma partida', async function() {
+    sinon.stub(SequelizeMatch, 'update').resolves([1]);
+
+    const token = await chai.request(app).post('/login').send({ email: 'user@user.com', password: 'secret_user'});
+    const { status } = await chai.request(app).patch('/matches/1/finish').set('authorization', `Bearer ${token.body.token}`);
+
+    expect(status).to.be.equal(200);
+  });
+
+  it('PATCH /matches/:id/finish - Deve retornar erro 404 ao tentar finalizar uma partida que não existe', async function() {
+    sinon.stub(SequelizeMatch, 'update').resolves([0]);
+    
+    const token = await chai.request(app).post('/login').send({ email: 'user@user.com', password: 'secret_user'});
+    const { status } = await chai.request(app).patch('/matches/19998/finish').set('authorization', `Bearer ${token.body.token}`);
+
+    expect(status).to.be.equal(404);
+  });
+
+  it('PATCH /matches/:id - Deve atualizar o resultado de uma partida', async function() {
+    sinon.stub(SequelizeMatch, 'update').resolves([1]);
+    
+    const token = await chai.request(app).post('/login').send({ email: 'user@user.com', password: 'secret_user'});
+    const { status } = await chai.request(app).patch('/matches/1').send({ homeTeamGoals: 1, awayTeamGoals: 2 }).set('authorization', `Bearer ${token.body.token}`);
+
+    expect(status).to.be.equal(200);
+  });
+
+  it('PATCH /matches/:id - Deve retornar erro 404 ao tentar atualizar o resultado de uma partida que não existe', async function() {
+    sinon.stub(SequelizeMatch, 'update').resolves([0]);
+    
+    const token = await chai.request(app).post('/login').send({ email: 'user@user.com', password: 'secret_user'});
+    const { status } = await chai.request(app).patch('/matches/1988978').send({ homeTeamGoals: 1, awayTeamGoals: 2 }).set('authorization', `Bearer ${token.body.token}`);
+
+    expect(status).to.be.equal(404);
   });
 
   afterEach(() => sinon.restore())

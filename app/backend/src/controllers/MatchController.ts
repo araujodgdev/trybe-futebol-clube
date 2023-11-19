@@ -10,7 +10,8 @@ export default class MatchController {
       const filter: { inProgress?: boolean } = {};
       if (req.query.inProgress === 'true' || req.query.inProgress === undefined) {
         filter.inProgress = true;
-      } else if (req.query.inProgress === 'false') {
+      }
+      if (req.query.inProgress === 'false') {
         filter.inProgress = false;
       }
       const { status, data } = await this.matchService

@@ -93,6 +93,16 @@ describe('Testes de User', () => {
 
     const { body } = await chai.request(app).post('/login').send(loginData);
 
+    const { status, body: { role } } = await chai.request(app).get('/login/role').set('authorization', 'Bearer');
+
+    expect(status).to.be.equal(401);
+  });
+
+  it('GET /login/role - Should return a 401 error for an invalid token 2', async function() {
+    sinon.stub(SequelizeUser, 'findByPk').resolves(dbUser as any);
+
+    const { body } = await chai.request(app).post('/login').send(loginData);
+
     const { status, body: { role } } = await chai.request(app).get('/login/role').set('authorization', 'Bearer token');
 
     expect(status).to.be.equal(401);

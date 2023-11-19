@@ -21,4 +21,9 @@ export default class MatchController {
     const { status, data } = await this.matchService.findAll();
     return res.status(mapStatusHTTP(status)).json(data);
   }
+
+  public async finishMatch(req: Request, res: Response): Promise<Response> {
+    const { status, data } = await this.matchService.finishMatch(Number(req.params.id));
+    return res.status(mapStatusHTTP(status)).json(data);
+  }
 }

@@ -28,4 +28,10 @@ export default class MatchModel implements IMatchModel {
 
     return dbData;
   }
+
+  public async finishMatch(matchId: IMatch['id']): Promise<number[]> {
+    const dbData = await this.model.update({ inProgress: false }, { where: { id: matchId } });
+
+    return dbData;
+  }
 }

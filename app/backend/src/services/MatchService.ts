@@ -1,5 +1,5 @@
 import MatchModel from '../models/MatchModel';
-import { ServiceResponse } from '../Interfaces/ServiceResponse';
+import { ServiceMessage, ServiceResponse } from '../Interfaces/ServiceResponse';
 import IMatch from '../Interfaces/matches/IMatch';
 
 export default class MatchService {
@@ -22,6 +22,22 @@ export default class MatchService {
     return {
       status: 'SUCCESSFUL',
       data: matches,
+    };
+  }
+
+  public async finishMatch(matchId: IMatch['id']): Promise<ServiceResponse<ServiceMessage>> {
+    const [affectedRows] = await this.model.finishMatch(matchId);
+
+    if (affectedRows === 0) {
+      return {
+        status: 'NOT_FOUND',
+        data: { message: 'No match finished' },
+      };
+    }
+
+    return {
+      status: 'SUCCESSFUL',
+      data: { message: 'Finished' },
     };
   }
 }

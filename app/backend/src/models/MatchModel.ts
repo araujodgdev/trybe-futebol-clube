@@ -40,4 +40,10 @@ export default class MatchModel implements IMatchModel {
 
     return result;
   }
+
+  public async create(data: Omit<IMatch, 'id'>): Promise<IMatch> {
+    const dbData = await this.model.create(data);
+
+    return dbData;
+  }
 }

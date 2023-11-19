@@ -21,4 +21,10 @@ router.patch(
   (req: Request, res: Response) => matchController.finishMatch(req, res),
 );
 
+router.post(
+  '/',
+  LoginValidation.signedUp,
+  (req: Request, res: Response) => matchController.createMatch(req, res),
+);
+
 export default router;

@@ -13,7 +13,7 @@ export default class LoginValidation {
     }
 
     const [, token] = authorization.split(' ');
-    if (!token) return res.status(401).json({ message: 'Token not found' });
+    if (!token) return res.status(401).json({ message: 'Token must be a valid token' });
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string || 'secret');

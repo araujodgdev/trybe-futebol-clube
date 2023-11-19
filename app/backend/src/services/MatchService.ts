@@ -62,7 +62,7 @@ export default class MatchService {
   }
 
   public async create(data: Omit<IMatch, 'id'>): Promise<ServiceResponse<IMatch>> {
-    const match = await this.model.create(data);
+    const match = await this.model.create({ ...data, inProgress: true });
 
     return {
       status: 'SUCCESSFUL',

@@ -42,7 +42,7 @@ export default class MatchModel implements IMatchModel {
   }
 
   public async create(data: Omit<IMatch, 'id'>): Promise<IMatch> {
-    const dbData = await this.model.create(data);
+    const dbData = await this.model.create({ ...data, inProgress: true });
 
     return dbData;
   }

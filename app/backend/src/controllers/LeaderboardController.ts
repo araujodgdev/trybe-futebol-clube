@@ -11,7 +11,15 @@ export default class LeaderboardController {
     req: Request,
     res: Response,
   ): Promise<Response> {
-    const { status, data } = await this.leaderboardService.getSortedLeaderboardHome();
+    const { status, data } = await this.leaderboardService.getSortedLeaderboard('homeTeamId');
+    return res.status(mapStatusHTTP(status)).json(data);
+  }
+
+  public async getLeaderboardAway(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    const { status, data } = await this.leaderboardService.getSortedLeaderboard('awayTeamId');
     return res.status(mapStatusHTTP(status)).json(data);
   }
 }

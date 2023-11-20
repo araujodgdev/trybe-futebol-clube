@@ -3,16 +3,18 @@ import TeamModel from '../models/TeamModel';
 import MatchModel from '../models/MatchModel';
 import ILeaderBoard from '../Interfaces/ILeaderBoard';
 
+type Filter = 'homeTeamId' | 'awayTeamId';
+
 export default class LeaderboardService {
   constructor(
     private teamModel = new TeamModel(),
     private matchModel = new MatchModel(),
   ) {}
 
-  public async generateLeaderboardHome(): Promise<ILeaderBoard[]> {
+  public async generateLeaderboard(filter: Filter): Promise<ILeaderBoard[]> {
     const leaderboard = (await this.teamModel.findAll()).map(async (team) => {
       const matches = (await this.matchModel.findInProgress({ inProgress: false }))
-        .filter((match) => match.homeTeamId === team.id);
+        .filter((match) => match[filter] === team.id);
 
       const wins = matches.filter((match) => match.homeTeamGoals > match.awayTeamGoals);
       const draws = matches.filter((match) => match.homeTeamGoals === match.awayTeamGoals);
@@ -32,16 +34,16 @@ export default class LeaderboardService {
     return Promise.all(leaderboard);
   }
 
-  public async getLeaderboardHome(): Promise<ILeaderBoard[]> {
-    const leaderboard = await this.generateLeaderboardHome();
+  public async getLeaderboard(filter: Filter): Promise<ILeaderBoard[]> {
+    const leaderboard = await this.generateLeaderboard(filter);
     const aditionalInfo = leaderboard.map((team) => {
       const goalsBalance = team.goalsFavor - team.goalsOwn;
-      const efficiency = (team.totalPoints / (team.totalGames * 3)) * 100;
+      const efficiency = ((team.totalPoints / (team.totalGames * 3)) * 100).toFixed(2);
 
       return {
         ...team,
         goalsBalance,
-        efficiency,
+        efficiency: Number(efficiency),
       };
     });
 
@@ -58,8 +60,8 @@ export default class LeaderboardService {
     return sortedLeaderboard;
   }
 
-  public async getSortedLeaderboardHome(): Promise<ServiceResponse<ILeaderBoard[]>> {
-    const leaderboard = await this.getLeaderboardHome();
+  public async getSortedLeaderboard(filter: Filter): Promise<ServiceResponse<ILeaderBoard[]>> {
+    const leaderboard = await this.getLeaderboard(filter);
 
     const goalsFavorSort = LeaderboardService.sortByParam('goalsFavor', leaderboard);
 
